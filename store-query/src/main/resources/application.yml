@@ -1,0 +1,38 @@
+server:
+ port: 8082
+ 
+spring:
+ application:
+  name: store-query
+
+ datasource:
+    url: jdbc:mysql://localhost:3306/productquerydb
+    username: root
+    password: password
+    driver-class-name:
+     com.mysql.cj.jdbc.Driver
+   
+ jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+  
+ kafka:
+  template:
+   default-topic: pro-topic1
+  consumer:
+   bootstrap-servers: localhost:9092
+   group-id: pro-group1
+   auto-offset-reset: earliest
+   key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+   value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      
+  #Kafka can deserialize all the classes from this package
+  properties:
+   spring:
+    json:
+     trusted:
+      packages: com.cqsr.event
