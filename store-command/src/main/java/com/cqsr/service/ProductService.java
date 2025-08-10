@@ -4,5 +4,6 @@ import com.cqsr.model.Product;
 
 public interface ProductService {
 
-	public Product addNewProduct(Product product);
+	Product addNewProduct(Product product);
+	Product editProductById(Long productId, Product product);
 }

@@ -27,6 +27,9 @@ public class Product {
 		this.price = price;
 	}
 	
+	public Long getProductId() {
+		return productId;
+	}
 	public String getProductName() {
 		return productName;
 	}
@@ -50,5 +53,10 @@ public class Product {
 	}
 	public void setPrice(Double price) {
 		this.price = price;
+	}
+	@Override
+	public String toString() {
+		return "Product [productId=" + productId + ", productName=" + productName + ", category=" + category
+				+ ", quantity=" + quantity + ", price=" + price + "]";
 	}
 }
