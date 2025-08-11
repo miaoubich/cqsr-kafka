@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cqsr.dto.ProductRequest;
+import com.cqsr.dto.ProductResponse;
 import com.cqsr.model.Product;
 import com.cqsr.service.ProductService;
 
@@ -25,15 +27,15 @@ public class ProductController {
 	private ProductService productService;
 
 	@PostMapping
-	public ResponseEntity<?> createProduct(@RequestBody Product product) {
-		Product result = productService.addNewProduct(product);
+	public ResponseEntity<?> createProduct(@RequestBody ProductRequest product) {
+		ProductResponse result = productService.addNewProduct(product);
 		return ResponseEntity.status(HttpStatus.CREATED).body(result);
 	}
 
 	@PutMapping("/{productId}")
 	public ResponseEntity<?> updateProduct(@PathVariable("productId") Long productId, 
-									@RequestBody Product product) {
-		Product result = productService.editProductById(productId, product);
+									@RequestBody ProductRequest product) {
+		ProductResponse result = productService.editProductById(productId, product);
 		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
 	

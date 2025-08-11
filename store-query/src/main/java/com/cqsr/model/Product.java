@@ -30,6 +30,10 @@ public class Product {
 	public Long getProductId() {
 		return productId;
 	}
+	
+	public void setProductId(Long productId) {
+		this.productId = productId;
+	}
 	public String getProductName() {
 		return productName;
 	}

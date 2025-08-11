@@ -28,10 +28,11 @@ public class ProductServiceImpl implements ProductService {
 		if (productEvent != null) {
 			product = productEvent.getProduct();
 			type = productEvent.getType();
-			
+
 			logger.info("product: {}, action Type: {}", product, type);
 
 			if (type.equals("createProduct")) {
+				product.setProductId(null); // Prevent Hibernate from treating it as an update
 				productRepository.save(product);
 				logger.info("product saved successfully in DB!");
 			} else if (type.equals("updateProduct")) {
@@ -43,8 +44,7 @@ public class ProductServiceImpl implements ProductService {
 				existProduct.setPrice(product.getPrice());
 				productRepository.save(existProduct);
 				logger.info("product updated and saved successfully in DB!");
-			}
-			else if(type.equals("deleteProduct")){
+			} else if (type.equals("deleteProduct")) {
 				productRepository.deleteById(product.getProductId());
 				logger.info("Product with ID -> " + product.getProductId() + " deleted from the consumer service");
 			}
@@ -53,8 +53,8 @@ public class ProductServiceImpl implements ProductService {
 
 	private Product getProductById(Long productId) {
 		var existProduct = productRepository.findById(productId)
-				.orElseThrow(() -> new ProductNotFoundException("Product with ID + " +
-						productId + " not found!", HttpStatus.NOT_FOUND));
+				.orElseThrow(() -> new ProductNotFoundException("Product with ID + " + productId + " not found!",
+						HttpStatus.NOT_FOUND));
 		return existProduct;
 	}
 }
