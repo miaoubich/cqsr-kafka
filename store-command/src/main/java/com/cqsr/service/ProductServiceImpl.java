@@ -58,6 +58,19 @@ public class ProductServiceImpl implements ProductService {
 		
 		return existProduct;
 	}
+	
+	@Override
+	public void deleteProduct(Long productId) {
+		if(isProductExist(productId) != null) {
+			Product productToBedeleted = isProductExist(productId);
+			productRepository.deleteById(productId);
+			logger.info("Product with ID " + productId + "successfully deleted!");
+			
+			var productEvent = new ProductEvent("deleteProduct", productToBedeleted);
+			template.send(topic, productEvent);
+			logger.info("ProductEvent subscribed to kafka topic -> {}", topic);
+		}
+	}
 
 	private Product isProductExist(Long productId) {
 		Product existProduct = productRepository.findById(productId)

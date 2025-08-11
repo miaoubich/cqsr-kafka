@@ -35,7 +35,7 @@ public class ProductServiceImpl implements ProductService {
 				productRepository.save(product);
 				logger.info("product saved successfully in DB!");
 			} else if (type.equals("updateProduct")) {
-				var existProduct = IsProductExist(product);
+				var existProduct = getProductById(product.getProductId());
 
 				existProduct.setProductName(product.getProductName());
 				existProduct.setCategory(product.getCategory());
@@ -44,13 +44,17 @@ public class ProductServiceImpl implements ProductService {
 				productRepository.save(existProduct);
 				logger.info("product updated and saved successfully in DB!");
 			}
+			else if(type.equals("deleteProduct")){
+				productRepository.deleteById(product.getProductId());
+				logger.info("Product with ID -> " + product.getProductId() + " deleted from the consumer service");
+			}
 		}
 	}
 
-	private Product IsProductExist(Product product) {
-		var existProduct = productRepository.findById(product.getProductId())
+	private Product getProductById(Long productId) {
+		var existProduct = productRepository.findById(productId)
 				.orElseThrow(() -> new ProductNotFoundException("Product with ID + " +
-						product.getProductId() + " not found!", HttpStatus.NOT_FOUND));
+						productId + " not found!", HttpStatus.NOT_FOUND));
 		return existProduct;
 	}
 }
