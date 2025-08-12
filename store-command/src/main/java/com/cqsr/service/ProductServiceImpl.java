@@ -77,7 +77,7 @@ public class ProductServiceImpl implements ProductService {
 
 	private Product isProductExist(Long productId) {
 		Product existProduct = productRepository.findById(productId)
-				.orElseThrow(() -> new ProductNotFoundException("Product with ID + " + productId + " not found!",
+				.orElseThrow(() -> new ProductNotFoundException("Product with ID -> " + productId + " not found!",
 						HttpStatus.NOT_FOUND));
 		return existProduct;
 	}
