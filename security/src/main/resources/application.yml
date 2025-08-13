@@ -31,4 +31,8 @@ spring:
       bootstrap-servers: localhost:9092
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+     
+#to generate new key run 'openssl rand -hex 32' in git bash 
+secret:
+ key: 641afd4eb2031d45396e27476a2bfb2df733d625323aba3dd2eba1460a58f85b
 

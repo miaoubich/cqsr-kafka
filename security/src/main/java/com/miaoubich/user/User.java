@@ -26,19 +26,19 @@ public class User implements UserDetails, CredentialsContainer {
 	private String firstname;
 	private String lastname;
 	private String email;
-	private String password;
+	private String pwd;
 	
 	@Enumerated(EnumType.STRING)
 	private Role role;
 	
 	public User() {}
 
-	public User(String firstname, String lastname, String email, String password) {
+	public User(String firstname, String lastname, String email, String pwd) {
 		super();
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.email = email;
-		this.password = password;
+		this.pwd = pwd;
 	}
 
 	public String getFirstname() {
@@ -65,12 +65,12 @@ public class User implements UserDetails, CredentialsContainer {
 		this.email = email;
 	}
 
-	public String getPassword() {
-		return password;
+	public String getPass() {
+		return pwd;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
+	public void setPass(String password) {
+		this.pwd = password;
 	}
 
 	public Integer getId() {
@@ -80,7 +80,7 @@ public class User implements UserDetails, CredentialsContainer {
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", firstname=" + firstname + ", lastname=" + lastname + ", email=" + email
-				+ ", password=" + password + "]";
+				+ ", password=" + pwd + "]";
 	}
 
 	@Override
@@ -95,26 +95,27 @@ public class User implements UserDetails, CredentialsContainer {
 	
 	@Override
 	public boolean isAccountNonExpired() {
-
-		return false;
+		return true;
 	}
 	
 	@Override
 	public boolean isAccountNonLocked() {
-
-		return false;
+		return true;
 	}
 	
 	@Override
 	public boolean isCredentialsNonExpired() {
-
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isEnabled() {
+		return true;
+	}
 
-		return false;
+	@Override
+	public String getPassword() {
+		return pwd;
 	}
 
 	@Override
