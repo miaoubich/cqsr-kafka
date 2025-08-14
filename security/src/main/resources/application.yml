@@ -23,16 +23,7 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
         
- 
-  kafka:
-    template:
-      default-topic: pro-topic1
-    producer:
-      bootstrap-servers: localhost:9092
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-     
-#to generate new key run 'openssl rand -hex 32' in git bash 
+#to generate new key run 'openssl rand -base64 32' in git bash 
 secret:
- key: 641afd4eb2031d45396e27476a2bfb2df733d625323aba3dd2eba1460a58f85b
+ key: 1cRp2mws9Oly4LgGjH4MTAbQLbGl4zEe8p7lK2Jd5Sw=
 

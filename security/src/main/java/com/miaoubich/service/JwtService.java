@@ -2,6 +2,7 @@ package com.miaoubich.service;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -19,7 +20,7 @@ import io.jsonwebtoken.security.Keys;
 public class JwtService {
 	 
 	@Value("${secret.key}")
-	private static String SECRET_KEY;
+	private String secretKey;
 
 	public String extractUsername(String token) {
 		return extractClaim(token, Claims::getSubject);
@@ -28,6 +29,10 @@ public class JwtService {
 	public <T> T extractClaim(String jwtToken, Function<Claims, T> claimResolver){
 		final Claims claims = extractAllClaims(jwtToken);
 		return claimResolver.apply(claims);
+	}
+	
+	public String generateToken(UserDetails userDetails) {
+	return generateToken(new HashMap<>(), userDetails);	
 	}
 	
 	public String generateToken(Map<String, Object> extraClaims,  UserDetails userDetails) {
@@ -39,6 +44,19 @@ public class JwtService {
 				.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))//valid for 24 hours 
 				.signWith(getSigningKey(), SignatureAlgorithm.HS256)
 				.compact();
+	}
+	
+	public boolean isTokenValid(String token, UserDetails userDetails) {
+		final String username = extractUsername(token);
+		return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+	}
+
+	private boolean isTokenExpired(String token) {
+		return extractExperation(token).before(new Date());
+	}
+
+	private Date extractExperation(String token) {
+		return extractClaim(token, Claims::getExpiration);
 	}
 
 	private Claims extractAllClaims(String jwtToken) {
@@ -52,7 +70,7 @@ public class JwtService {
 	}
 
 	private Key getSigningKey() {
-		byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+		byte[] keyBytes = Decoders.BASE64.decode(secretKey);
 		return Keys.hmacShaKeyFor(keyBytes);
 	}
 }

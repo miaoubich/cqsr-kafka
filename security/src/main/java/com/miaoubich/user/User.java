@@ -26,19 +26,20 @@ public class User implements UserDetails, CredentialsContainer {
 	private String firstname;
 	private String lastname;
 	private String email;
-	private String pwd;
+	private String pass;
 	
 	@Enumerated(EnumType.STRING)
 	private Role role;
 	
 	public User() {}
 
-	public User(String firstname, String lastname, String email, String pwd) {
+	public User(String firstname, String lastname, String email, String pass, Role role) {
 		super();
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.email = email;
-		this.pwd = pwd;
+		this.pass = pass;
+		this.role = role;
 	}
 
 	public String getFirstname() {
@@ -66,21 +67,29 @@ public class User implements UserDetails, CredentialsContainer {
 	}
 
 	public String getPass() {
-		return pwd;
+		return pass;
 	}
 
 	public void setPass(String password) {
-		this.pwd = password;
+		this.pass = password;
 	}
 
 	public Integer getId() {
 		return id;
 	}
+	
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
 
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", firstname=" + firstname + ", lastname=" + lastname + ", email=" + email
-				+ ", password=" + pwd + "]";
+				+ ", password=" + pass + "]";
 	}
 
 	@Override
@@ -115,7 +124,7 @@ public class User implements UserDetails, CredentialsContainer {
 
 	@Override
 	public String getPassword() {
-		return pwd;
+		return pass;
 	}
 
 	@Override
