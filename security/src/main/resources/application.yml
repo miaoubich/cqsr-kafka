@@ -26,4 +26,8 @@ spring:
 #to generate new key run 'openssl rand -base64 32' in git bash 
 secret:
  key: 1cRp2mws9Oly4LgGjH4MTAbQLbGl4zEe8p7lK2Jd5Sw=
+ 
+logging:
+ level:
+  com.miaoubich: INFO
 

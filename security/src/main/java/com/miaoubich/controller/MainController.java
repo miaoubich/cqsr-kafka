@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController 
 @RequestMapping("/api/v1/test-endpoint")
-public class DemoController {
+public class MainController {
 
 	@GetMapping
 	public ResponseEntity<String> testMethod(){
