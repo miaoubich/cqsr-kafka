@@ -6,10 +6,10 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-public class StoreQueryApplication {
+public class ApiGatewayApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(StoreQueryApplication.class, args);
+		SpringApplication.run(ApiGatewayApplication.class, args);
 	}
 
 }

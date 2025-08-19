@@ -1,11 +1,12 @@
 server:
  port: 8081
 spring:
+  application:
+    name: store-command
+    
   profiles:
    active:
     - dev
-  application:
-    name: store-command
 
   datasource:
     url: jdbc:mysql://localhost:3306/productcmddb
@@ -35,4 +36,9 @@ spring:
 logging:
  level:
   com.miaoubich: INFO
+  
+eureka:
+ client:
+  service-url:
+   defaultZone: http://localhost:8761/eureka/
 

@@ -1,0 +1,40 @@
+server:
+ port: 8080
+ 
+spring:
+ application:
+  name: api-gateway
+    
+ profiles:
+  active:
+   - dev
+    
+ cloud:
+  gateway:
+   default-filters:
+    - RemoveRequestHeader=Cookie
+   routes:
+    - id: store-command
+      uri: lb://store-command
+      predicates:
+       - Path=/store-command/**
+      filters:
+       - StripPrefix=1
+    - id: store-query
+      uri: lb://store-query
+      predicates: 
+       - Path=/store-query/**
+      filters:
+       - StripPrefix=1
+    
+eureka:
+ client:
+  service-url:
+   defaultZone: http://localhost:8761/eureka/   
+
+logging:
+ level:
+  org.springframework.cloud.gateway: INFO
+  org.springframework.security: INFO
+        
+

@@ -4,6 +4,10 @@ server:
 spring:
  application:
   name: store-query
+ 
+ profiles:
+   active:
+    - dev
 
  datasource:
     url: jdbc:mysql://localhost:3306/productquerydb
@@ -37,3 +41,12 @@ spring:
     json:
      trusted:
       packages: com.cqsr.event
+      
+logging:
+ level:
+  com.miaoubich: INFO
+      
+eureka:
+ client:
+  service-url:
+   defaultZone: http://localhost:8761/eureka/
