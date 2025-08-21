@@ -5,27 +5,40 @@ spring:
  application:
   name: api-gateway
     
- profiles:
-  active:
-   - dev
+ #profiles:
+  #active:
+   #- dev
+   
+ main:
+  web-application-type: reactive
     
  cloud:
   gateway:
    default-filters:
     - RemoveRequestHeader=Cookie
-   routes:
-    - id: store-command
-      uri: lb://store-command
-      predicates:
-       - Path=/store-command/**
-      filters:
-       - StripPrefix=1
-    - id: store-query
-      uri: lb://store-query
-      predicates: 
-       - Path=/store-query/**
-      filters:
-       - StripPrefix=1
+   server:
+    webflux:
+     routes:
+      - id: store-command
+        uri: lb://store-command
+        predicates:
+         - Path=/store-command/**
+        filters:
+         - StripPrefix=1
+      - id: store-query
+        uri: lb://store-query
+        predicates: 
+         - Path=/store-query/**
+        filters:
+         - StripPrefix=1
+       
+ #OAuth2 COnfiguration http://localhost:9090/realms/Bouzar/.well-known/openid-configuration
+ security:
+  oauth2:
+   resourceserver:
+    jwt: 
+     issuer-uri: http://localhost:9090/realms/Bouzar
+     jwk-set-uri: http://localhost:9090/realms/Bouzar/protocol/openid-connect/certs
     
 eureka:
  client:
@@ -36,5 +49,8 @@ logging:
  level:
   org.springframework.cloud.gateway: INFO
   org.springframework.security: INFO
+  
+
+
         
 
