@@ -72,10 +72,15 @@ public class SecurityConfig {
 	public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
 	    return builder.routes()
 	        .route("store_query_route", r -> r.path("/store-query/**")
-	            .filters(f -> f
-	            			.stripPrefix(1)
-	            			.addRequestHeader("X-Gateway-Auth", "ali-query"))
-	            .uri("lb://store-query"))
+		            .filters(f -> f
+		            			.stripPrefix(1)
+		            			.addRequestHeader("X-Gateway-Auth", "ali-query"))
+		            .uri("lb://store-query"))
+	        .route("store_command_route", r -> r.path("/store-command/**")
+	        		.filters(f -> f
+	        					.stripPrefix(1)
+	        					.addRequestHeader("X-Gateway-Auth", "ali-command"))
+	        		.uri("lb://store-command"))
 	        .build();
 	}
 }

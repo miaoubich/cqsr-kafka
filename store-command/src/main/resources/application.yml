@@ -4,15 +4,22 @@ spring:
   application:
     name: store-command
     
-  profiles:
-   active:
-    - dev
+  #profiles:
+   #active:
+    #- dev
 
   datasource:
     url: jdbc:mysql://localhost:3306/productcmddb
     username: root
     password: password
     driver-class-name: com.mysql.cj.jdbc.Driver
+    
+ #OAuth2 COnfiguration http://localhost:9090/realms/Bouzar/.well-known/openid-configuration    
+  security:
+   oauth2:
+    resourceserver:
+     jwt:
+      issuer-uri: http://localhost:9090/realms/Bouzar
 
     
   jpa:

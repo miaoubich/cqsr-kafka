@@ -80,6 +80,7 @@
 		  <artifactId>logback-classic</artifactId>
 		</dependency>
 		
+		<!-- start security -->
 		<dependency>
 		    <groupId>org.springframework.boot</groupId>
 		    <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
@@ -88,7 +89,8 @@
 		  <groupId>org.springframework.boot</groupId>
 		  <artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
-
+		<!-- end security -->
+		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
