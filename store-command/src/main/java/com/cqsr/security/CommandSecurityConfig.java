@@ -1,5 +1,6 @@
 package com.cqsr.security;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authorization.AuthorizationDecision;
@@ -11,7 +12,12 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig {
+public class CommandSecurityConfig {
+	
+	@Value("${internal.auth.to-store-product.header}")
+	 private String internalHeader;
+	 @Value("${internal.auth.to-store-command.value}")
+	 private String internalToken;
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -19,8 +25,8 @@ public class SecurityConfig {
 	        .authorizeHttpRequests(auth -> auth
 	            .anyRequest().access((authentication, context) -> {
 	                HttpServletRequest request = context.getRequest();
-	                String gatewayHeader = request.getHeader("X-Gateway-Auth");
-	                if ("ali-command".equals(gatewayHeader)) {
+	                String gatewayHeader = request.getHeader(internalHeader);
+	                if (internalToken.equals(gatewayHeader)) {
 	                    return new AuthorizationDecision(true);
 	                }
 	                return new AuthorizationDecision(false);

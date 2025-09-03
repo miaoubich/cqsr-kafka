@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.cqsr</groupId>
-	<artifactId>store-query</artifactId>
+	<artifactId>order-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>store-query</name>
-	<description>Demo project for Spring Boot Store using cqsr + kafka</description>
+	<name>order-service</name>
+	<description>Demo project for Spring Boot Order Service</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -29,22 +29,29 @@
 	<properties>
 		<java.version>17</java.version>
 		<org.mapstruct.version>1.6.3</org.mapstruct.version>
-		<spring-cloud.version>2025.0.0</spring-cloud.version>
+		<spring-cloud.version>2024.0.0</spring-cloud.version>
 	</properties>
 	
 	<dependencies>
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-		</dependency>
-		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.kafka</groupId>
@@ -63,6 +70,12 @@
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
 	        <groupId>org.mapstruct</groupId>
 	        <artifactId>mapstruct</artifactId>
 	        <version>${org.mapstruct.version}</version>
@@ -73,23 +86,11 @@
 		  <groupId>org.slf4j</groupId>
 		  <artifactId>slf4j-api</artifactId>
 		</dependency>
-		
 		<!-- Logback Classic (binding for SLF4J) -->
 		<dependency>
 		  <groupId>ch.qos.logback</groupId>
 		  <artifactId>logback-classic</artifactId>
 		</dependency>
-		
-		<!-- start security -->
-		<dependency>
-		    <groupId>org.springframework.boot</groupId>
-		    <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
-		</dependency>
-		<dependency>
-		  <groupId>org.springframework.boot</groupId>
-		  <artifactId>spring-boot-starter-security</artifactId>
-		</dependency>
-		<!-- end security -->
 		
 		<dependency>
 		    <groupId>org.springframework.cloud</groupId>
@@ -97,17 +98,17 @@
 		</dependency>
 		
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.springframework.kafka</groupId>
 			<artifactId>spring-kafka-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
-
+	
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -120,6 +121,14 @@
 		</dependencies>
 	</dependencyManagement>
 	
+	<repositories>
+    <repository>
+        <id>spring-milestones</id>
+        <name>Spring Milestone Repository</name>
+        <url>https://repo.spring.io/milestone</url>
+    </repository>
+</repositories>
+
 	<build>
 		<plugins>
 			<plugin>

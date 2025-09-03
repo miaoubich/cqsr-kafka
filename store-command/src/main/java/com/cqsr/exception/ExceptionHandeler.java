@@ -13,4 +13,8 @@ public class ExceptionHandeler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
+	@ExceptionHandler(ProductQuantityNotEnoughException.class)
+	public ResponseEntity<String> handleProductQuantityNotFound(ProductNotFoundException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
 }

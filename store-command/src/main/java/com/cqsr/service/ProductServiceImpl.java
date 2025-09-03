@@ -12,6 +12,7 @@ import com.cqsr.dto.ProductRequest;
 import com.cqsr.dto.ProductResponse;
 import com.cqsr.event.ProductEvent;
 import com.cqsr.exception.ProductNotFoundException;
+import com.cqsr.exception.ProductQuantityNotEnoughException;
 import com.cqsr.mapper.ProductMapper;
 import com.cqsr.model.Product;
 import com.cqsr.repository.ProductRepository;
@@ -76,9 +77,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	private Product isProductExist(Long productId) {
-		Product existProduct = productRepository.findById(productId)
-				.orElseThrow(() -> new ProductNotFoundException("Product with ID -> " + productId + " not found!",
-						HttpStatus.NOT_FOUND));
+		Product existProduct = getProductById(productId);
 		return existProduct;
 	}
 
@@ -86,5 +85,25 @@ public class ProductServiceImpl implements ProductService {
 		var event = new ProductEvent(action, product);
 		template.send(topic, event);
 		logger.info("ProductEvent '{}' published to topic '{}'", action, topic);
+	}
+
+	@Override
+	public void reduceProductQuantity(Long id, int amount) {
+		Product product = getProductById(id);
+		
+		if(product.getQuantity() >= amount) {
+			product.setQuantity(product.getQuantity()-amount);
+			productRepository.save(product);
+			publishEvent("updateProduct", product);
+		}
+		else throw new ProductQuantityNotEnoughException("Product amount exceed the product quantity available in our stock", HttpStatus.CONFLICT);
+		
+	}
+
+	private Product getProductById(Long id) {
+		Product product = productRepository.findById(id)
+				.orElseThrow(() -> new ProductNotFoundException("Product with ID -> " + id + " not found!",
+						HttpStatus.NOT_FOUND));
+		return product;
 	}
 }

@@ -1,27 +1,14 @@
 server:
  port: 8081
+ 
 spring:
   application:
     name: store-command
-    
-  #profiles:
-   #active:
-    #- dev
-
   datasource:
     url: jdbc:mysql://localhost:3306/productcmddb
     username: root
     password: password
     driver-class-name: com.mysql.cj.jdbc.Driver
-    
- #OAuth2 COnfiguration http://localhost:9090/realms/Bouzar/.well-known/openid-configuration    
-  security:
-   oauth2:
-    resourceserver:
-     jwt:
-      issuer-uri: http://localhost:9090/realms/Bouzar
-
-    
   jpa:
     show-sql: true
     hibernate:
@@ -29,9 +16,13 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
-        format_sql: true
-        
- 
+        format_sql: true   
+ #OAuth2 COnfiguration http://localhost:9090/realms/Bouzar/.well-known/openid-configuration    
+  security:
+   oauth2:
+    resourceserver:
+     jwt:
+      issuer-uri: http://localhost:9090/realms/Bouzar
   kafka:
     template:
       default-topic: pro-topic1
@@ -40,12 +31,44 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
-logging:
- level:
-  com.miaoubich: INFO
-  
+  cloud:
+   loadbalancer:
+    enabled: true 
+    
 eureka:
  client:
   service-url:
    defaultZone: http://localhost:8761/eureka/
+ instance:
+  prefer-ip-address: true
+   
+internal:
+ auth:
+  to-store-product:
+   header: X-Gateway-Auth
+  to-store-query:
+   value: ali-query
+  to-store-command:
+   value: ali-command
+   
+feign:
+ discovery:
+  enabled: true # REQUIRED so @FeignClient(name="store-query") uses Eureka
+ okhttp:
+  enabled: true  # If you're using OkHttp client
+ httpclient:
+  enabled: false # Avoid conflicting clients
+   
+logging:
+ level:
+  com.cqsr: INFO
+  feign: DEBUG
+  org.springframework.cloud.openfeign: DEBUG
+  org.springframework.cloud.loadbalancer: DEBUG
+  
+  
+
+ #profiles:
+   #active:
+    #- dev
 

@@ -5,15 +5,14 @@ spring:
  application:
   name: api-gateway
     
- #profiles:
-  #active:
-   #- dev
-   
  main:
   web-application-type: reactive
     
  cloud:
   gateway:
+   discovery:
+    locator:
+     enabled: true
    default-filters:
     - RemoveRequestHeader=Cookie
    server:
@@ -43,7 +42,9 @@ spring:
 eureka:
  client:
   service-url:
-   defaultZone: http://localhost:8761/eureka/   
+   defaultZone: http://localhost:8761/eureka/  
+ instance:
+  prefer-ip-address: true #Register IP instance of hostname 
 
 logging:
  level:
@@ -61,6 +62,12 @@ management:
    enabled: true
  security:
   enabled: false
+  
+ #profiles:
+  #active:
+   #- dev
+  
+
     
   
 
