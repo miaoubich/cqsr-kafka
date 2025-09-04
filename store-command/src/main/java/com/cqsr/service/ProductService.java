@@ -1,7 +1,7 @@
 package com.cqsr.service;
 
-import com.cqsr.dto.ProductRequest;
-import com.cqsr.dto.ProductResponse;
+import com.cqsr.records.ProductRequest;
+import com.cqsr.records.ProductResponse;
 
 public interface ProductService {
 

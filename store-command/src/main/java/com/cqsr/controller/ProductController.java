@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cqsr.dto.ProductRequest;
-import com.cqsr.dto.ProductResponse;
+import com.cqsr.records.ProductRequest;
+import com.cqsr.records.ProductResponse;
 import com.cqsr.service.ProductService;
 
 @RestController

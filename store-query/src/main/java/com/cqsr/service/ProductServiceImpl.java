@@ -9,11 +9,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
-import com.cqsr.dto.ProductResponse;
 import com.cqsr.event.ProductEvent;
 import com.cqsr.exception.ProductNotFoundException;
 import com.cqsr.mapper.ProductMapper;
 import com.cqsr.model.Product;
+import com.cqsr.records.ProductResponse;
 import com.cqsr.repository.ProductRepository;
 
 @Service

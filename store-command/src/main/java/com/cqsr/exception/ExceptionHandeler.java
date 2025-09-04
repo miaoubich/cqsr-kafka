@@ -14,7 +14,12 @@ public class ExceptionHandeler {
     }
 
 	@ExceptionHandler(ProductQuantityNotEnoughException.class)
-	public ResponseEntity<String> handleProductQuantityNotFound(ProductNotFoundException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+	public ResponseEntity<String> handleProductQuantityNotFound(ProductQuantityNotEnoughException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
+	
+	@ExceptionHandler(PriceValueException.class)
+	public ResponseEntity<String> handleroductPrice(PriceValueException ex){
+		return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+	}
 }
