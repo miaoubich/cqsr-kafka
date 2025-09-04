@@ -94,4 +94,4 @@ Handles product retrieval operations.
 - Consumer service handles queries (get by ID, get all).
 
 ## License
-This project is licensed under the MIT License.
+This project is free of use.
