@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.lang.NonNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -17,7 +18,8 @@ public class KeycloakRoleConverter implements Converter<Jwt, Flux<GrantedAuthori
 
 	private final Logger logger = LoggerFactory.getLogger(KeycloakRoleConverter.class);
 	@Override
-	public Flux<GrantedAuthority> convert(Jwt jwt) {
+	public Flux<GrantedAuthority> convert(@NonNull Jwt jwt) {
+		// the role can be extracted from realm_access or from resource_access
 		Map<String, List<String>> realmAccess = jwt.getClaim("realm_access");
 		
 		if(realmAccess != null && realmAccess.containsKey("roles")) {
