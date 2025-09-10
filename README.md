@@ -92,6 +92,11 @@ Handles product retrieval operations.
 - Use the REST APIs provided by each service to interact with products.
 - Producer service handles commands (create, update, delete, reduce).
 - Consumer service handles queries (get by ID, get all).
+- API Gateway and Service Discovery
+- This application uses an API Gateway as a single entry point to route requests to the appropriate microservices. The gateway handles routing, load balancing, and security enforcement.
+- All services are registered with a Eureka Discovery Server, enabling dynamic discovery and communication between services without hardcoded URLs.
+- API Gateway: Centralized access point for all client requests
+- Eureka Server: Service registry for dynamic service discovery
 
 ## License
 This project is free of use.
