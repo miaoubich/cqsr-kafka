@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -95,6 +96,8 @@ class ProductServiceImplTests {
 
         // Then
         assertNotNull(result);
+        assertEquals("Mobile", result.category());
+        assertEquals(259.00, result.price());
         assertEquals("Moto-15", result.productName());
         assertEquals(19, result.quantity());
 
