@@ -1,9 +1,9 @@
 package com.miaoubich;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -48,12 +48,33 @@ class ProductServiceImplTests {
 
     @BeforeEach
     void setUp() {
-        productRequest = new ProductRequest("Moto-15", "Mobile", 19, 259.00);
+        productRequest = ProductRequest.builder()
+        		.productName("Moto-15")
+        		.category("mobile")
+        		.quantity(19)
+        		.price(259.00)
+        		.build();
         ReflectionTestUtils.setField(productService, "topic", "product-events");
+    }
+    
+    @Test
+    @DisplayName("addNewProduct should throw IllegalArgumentException when productRequest is null")
+    void addNewProduct_NullRequest_ThrowsException() {
+    	// Given
+    	String errorMessage = "ProductRequest must not be null !";
+    	
+    	// When + Then
+    	IllegalArgumentException illegalException = assertThrows(
+    				IllegalArgumentException.class, () -> productService.addNewProduct(null)
+    			);
+    	assertEquals(errorMessage, illegalException.getMessage());
+    	
+    	// Verify that no repository or Kafka calls were made
+    	verifyNoInteractions(productRepository, template, productMapper);
     }
 
     @Test
-    @DisplayName("Product successfully created")
+    @DisplayName("Product should successfully be created")
     void addProductSuccess() {
         // Given
         logger.info("productRequest -> {}", productRequest);
@@ -83,9 +104,9 @@ class ProductServiceImplTests {
 
         verify(template).send(eq(injectedTopic), eventCaptor.capture());
 
-        ProductEvent sentEvent = eventCaptor.getValue();
-        assertEquals("createProduct", sentEvent.getType());
-        assertEquals("Moto-15", sentEvent.getProduct().getProductName());
+        ProductEvent productEvent = eventCaptor.getValue();
+        assertEquals("createProduct", productEvent.getType());
+        assertEquals("Moto-15", productEvent.getProduct().getProductName());
     }
 }
 
