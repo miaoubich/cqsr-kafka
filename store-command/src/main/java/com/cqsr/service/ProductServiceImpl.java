@@ -59,10 +59,10 @@ public class ProductServiceImpl implements ProductService {
 		existProduct.setCategory(product.getCategory());
 		existProduct.setQuantity(product.getQuantity());
 		existProduct.setPrice(product.getPrice());
-		productRepository.save(existProduct);
+		Product savedProduct = productRepository.save(existProduct);
 
-		logger.info("existProduct ID: {}", existProduct.getProductId());
-		publishEvent("updateProduct", existProduct);
+		logger.info("Product with ID: {} was updated to {}", productId, savedProduct);
+		publishEvent("updateProduct", existProduct);// or savedProduct
 
 		return productMapper.toResponse(existProduct);
 	}
