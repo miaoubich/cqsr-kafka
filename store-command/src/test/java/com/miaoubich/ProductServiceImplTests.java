@@ -1,8 +1,12 @@
 package com.miaoubich;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -24,6 +28,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import com.cqsr.event.ProductEvent;
+import com.cqsr.exception.ProductQuantityNotEnoughException;
 import com.cqsr.mapper.ProductMapper;
 import com.cqsr.model.Product;
 import com.cqsr.records.ProductRequest;
@@ -56,7 +61,11 @@ class ProductServiceImplTests {
 
 	@BeforeEach
 	void setUp() {
-		productRequest = ProductRequest.builder().productName("Moto-15").category("mobile").quantity(19).price(259.00)
+		productRequest = ProductRequest.builder()
+				.productName("Moto-15")
+				.category("mobile")
+				.quantity(19)
+				.price(259.00)
 				.build();
 		// Inject Kafka topic into private field "topic" in ProductServiceImpl
 		ReflectionTestUtils.setField(productService, "topic", "product-events");
@@ -194,4 +203,57 @@ class ProductServiceImplTests {
         assertEquals(existingProduct.getQuantity(), sentEvent.getProduct().getQuantity());
         assertEquals(existingProduct.getPrice(), sentEvent.getProduct().getPrice());
     }
+	
+	@Test
+	@DisplayName("reduceProductQuantity Have to successfully reduce the product quantity and publish a partial product event")
+	void reduceProductTest() {
+		// Arrange
+		when(productRepository.findById(1L)).thenReturn(Optional.of(existingProduct));
+		when(productRepository.save(existingProduct)).thenReturn(existingProduct);
+		
+		// Act
+		productService.reduceProductQuantity(1L, 3);
+		
+		// Assert repository interactions
+        verify(productRepository).findById(1L);
+        verify(productRepository).save(existingProduct);
+        
+        // Assert quantity was reduced
+        assertEquals(2, existingProduct.getQuantity());
+        
+        // Capture and assert Kafka event
+        ArgumentCaptor<ProductEvent> eventCaptor = ArgumentCaptor.forClass(ProductEvent.class);
+        verify(template).send(eq("product-events"), eventCaptor.capture());
+        
+        ProductEvent sentEvent = eventCaptor.getValue();
+        assertEquals("updateProduct", sentEvent.getType());
+        assertEquals("OldName", sentEvent.getProduct().getProductName());
+        assertEquals(2, sentEvent.getProduct().getQuantity());
+	}
+	
+	@Test
+	@DisplayName("reduceProductQuantity should throw ProductQuantityNotEnoughException when amount exceeds stock")
+	void reduceProductQuantity_InsufficientStock_ThrowsException() {
+	    // Arrange
+	    when(productRepository.findById(1L)).thenReturn(Optional.of(existingProduct));
+
+	    // Act
+	    ProductQuantityNotEnoughException ex = assertThrows(
+	        ProductQuantityNotEnoughException.class,
+	        () -> productService.reduceProductQuantity(1L, 6) // request more than available
+	    );
+
+	    // Assert
+	    assertEquals(
+	        "Product amount exceed the product quantity available in our stock",
+	        ex.getMessage()
+	    );
+	    assertEquals(HttpStatus.CONFLICT, ex.getHttpStatus());
+
+	    // Verify repository was only used to find the product
+	    verify(productRepository).findById(1L);
+	    verify(productRepository, never()).save(any());
+	    verifyNoInteractions(template); // no Kafka event should be published
+	}
+
 }

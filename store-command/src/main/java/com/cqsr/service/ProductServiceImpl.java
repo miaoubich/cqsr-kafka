@@ -88,8 +88,8 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public void reduceProductQuantity(Long id, int amount) {
-		Product product = getProductById(id);
+	public void reduceProductQuantity(Long productId, int amount) {
+		Product product = getProductById(productId);
 		
 		if(product.getQuantity() >= amount) {
 			product.setQuantity(product.getQuantity()-amount);
