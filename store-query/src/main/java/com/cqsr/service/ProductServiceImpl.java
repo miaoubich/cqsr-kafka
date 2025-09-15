@@ -25,9 +25,9 @@ public class ProductServiceImpl implements ProductService {
 	private ProductRepository productRepository;
 	@Autowired
 	private ProductMapper mapper;
-
+  
 	@KafkaListener(topics = "pro-topic1", groupId = "pro-group1")
-	public void processStudentEvents(ProductEvent productEvent) {
+	public void processProductEvents(ProductEvent productEvent) {
 		Product product = null;
 		String type = null;
 
@@ -39,7 +39,7 @@ public class ProductServiceImpl implements ProductService {
 
 			switch (type) {
 			case "createProduct" -> {
-				product.setProductId(null);
+				product.setProductId(null);// To say to the Hibernate that this is a new created Product
 				productRepository.save(product);
 				logger.info("product saved successfully in DB!");
 			}

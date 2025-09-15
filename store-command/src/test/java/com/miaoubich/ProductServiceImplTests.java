@@ -36,7 +36,6 @@ import com.cqsr.records.ProductResponse;
 import com.cqsr.repository.ProductRepository;
 import com.cqsr.service.ProductServiceImpl;
 
-//@SpringBootTest
 @ExtendWith(MockitoExtension.class)
 @DisplayName("ProductServiceImpl Unit Tests")
 class ProductServiceImplTests {
