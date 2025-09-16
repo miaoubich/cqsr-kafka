@@ -1,11 +1,17 @@
 package com.miaoubich;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verifyNoInteractions;
 
+import static org.mockito.ArgumentMatchers.any;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
@@ -22,6 +28,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import com.cqsr.event.ProductEvent;
 import com.cqsr.mapper.ProductMapper;
 import com.cqsr.model.Product;
+import com.cqsr.records.ProductResponse;
 import com.cqsr.repository.ProductRepository;
 import com.cqsr.service.ProductServiceImpl;
 
@@ -34,9 +41,7 @@ public class ProductServiceImplTest {
 	@Mock
 	private ProductRepository productRepository;
 	@Mock
-	private KafkaTemplate<String, ProductEvent> template;
-	@Mock
-	private ProductMapper productMapper;
+	private ProductMapper mapper;
 	@InjectMocks
 	private ProductServiceImpl productService;
 	
@@ -118,5 +123,61 @@ public class ProductServiceImplTest {
 		
 		// Assert
 		verifyNoInteractions(productRepository);
+	}
+	
+	@Test
+	@DisplayName("getProductById should retrieve a product by its productId")
+	void getProductByIdTest() {
+		// Arrange
+		Long productId = 11L;
+		Product product = new Product("Smart TV", "TV", 10, 259.0);
+		ReflectionTestUtils.setField(product, "productId", productId);
+		
+		when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+		
+		// Act
+		Product result = productService.getProductById(productId);
+		
+		// Assert
+		assertNotNull(result);
+		assertEquals(productId, result.getProductId());
+		assertEquals("Smart TV", result.getProductName());
+		assertEquals("TV", result.getCategory());
+		assertEquals(10, result.getQuantity());
+		assertEquals(259.0, result.getPrice());
+		
+		verify(productRepository).findById(productId);
+	}
+	
+	@Test
+	@DisplayName("getAllProducts should retrieve a list of products")
+	void getAllProductsTest() {
+		// Arrange
+		var products = Arrays.asList(new Product("Smart TV", "TV", 10, 259.0),
+								     new Product("Smart Phone", "Phone", 8, 359.0),
+								     new Product("Smart Fridge", "Electronics", 15, 959.0));
+		when(productRepository.findAll()).thenReturn(products);
+		when(mapper.toResponse(any(Product.class)))
+        .thenAnswer(invocation -> {
+            Product p = invocation.getArgument(0);
+            return new ProductResponse(
+            		p.getProductId(), 
+            		p.getProductName(), 
+            		p.getCategory(), 
+            		p.getQuantity(), 
+            		p.getPrice());
+        });
+		
+		// Act
+		var result = productService.getAllProducts();
+		
+		// Assert
+		verify(productRepository).findAll();
+		
+		assertNotNull(result);
+		assertEquals(3, result.size());
+		assertEquals("Phone", result.get(1).category());
+		assertEquals("Smart Fridge", result.get(2).productName());
+		
 	}
 }
