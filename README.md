@@ -11,6 +11,7 @@
 - [Database](#database)
 - [Logging](#logging)
 - [Exception Handling](#exception-handling)
+- [Testing](#testing)
 - [Installation](#installation)
 - [Usage](#usage)
 - [License](#license)
@@ -33,6 +34,9 @@ This application demonstrates a microservices-based architecture using the CQRS 
 - SLF4J
 - Keycloak OAuth2.0
 - Records for DTOs
+- JUnit 5
+- Mockito
+- Spring Boot Test
 
 ## Services
 
@@ -80,6 +84,40 @@ Handles product retrieval operations.
 
 ## Exception Handling
 - Custom exception handlers are implemented for better error management.
+
+## Testing
+The application includes comprehensive unit tests using Mockito and JUnit 5 for both services:
+
+### Test Structure
+- **Service Layer Tests**: Mock repository dependencies to test business logic
+- **Controller Layer Tests**: Use MockMvc to test REST endpoints
+- **Kafka Producer Tests**: Verify event publishing functionality
+- **Exception Handling Tests**: Ensure proper error responses
+
+### Test Coverage
+- **store-command Service**:
+  - ProductService unit tests for CRUD operations
+  - ProductController integration tests
+  - KafkaProducerService tests for event publishing
+  - Exception handler tests
+
+- **store-query Service**:
+  - ProductQueryService unit tests for read operations
+  - ProductQueryController integration tests
+  - Event consumer tests
+
+### Running Tests
+```bash
+# Run tests for store-command service
+cd store-command
+mvn test
+
+# Run tests for store-query service
+cd store-query
+mvn test
+
+# Run all tests with coverage
+mvn clean test
 
 ## Installation
 1. Clone the repository from GitHub.
